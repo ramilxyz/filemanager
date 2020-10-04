@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Менеджер файлов OpenSSL</string>
+
+    <string name="list_of_files">Список файлов</string>
+    <string name="uploaded_files">Загруженные файлы</string>
+
+    <string name="error"> Ошибка соеднинения! </string>
+
+    <string name="not_saves">У вас нет загруженных файлов...</string>
+
+    <string name="offline_mode">Менеджер файлов (Оффлайн режим)</string>
+</resources>

@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">OpenSSL File Manager</string>
+
+    <string name="list_of_files">List of files</string>
+    <string name="uploaded_files">Uploaded files</string>
+
+    <string name="error"> Connection error!</string>
+
+    <string name="not_saves">You have no downloaded files...</string>
+
+    <string name="offline_mode">OpenSSL File Manager (Offline mode)</string>
+</resources>

@@ -1,0 +1,16 @@
+<resources>
+
+    <style name="AppTheme" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+        <item name="colorPrimary">@color/DodgerBlue</item>
+        <item name="colorPrimaryDark">@color/DeepSkyBlue</item>
+        <item name="colorAccent">@color/Teal</item>
+    </style>
+
+    <style name="AppTheme.Launcher">
+        <item name="android:windowBackground">@drawable/ll_splash</item>
+        <item name="colorPrimary">#7fce7f</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+</resources>
