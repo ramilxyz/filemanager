@@ -2,6 +2,7 @@ package xyz.ramil.filemanager.view.fragments
 
 import android.Manifest
 import android.content.Context
+import android.content.DialogInterface
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.Environment
@@ -11,6 +12,7 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.ProgressBar
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -197,6 +199,7 @@ class MainFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         }
     }
 
+
     fun downloadFiles(fileModel: FileModel, progressBar: ProgressBar) {
         Fuel.download(BASE_URL + "/source/snapshot/" + fileModel.name)
             .destination { response, url ->
@@ -219,6 +222,15 @@ class MainFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
                     ).show()
                     fileModelLocal?.isDownload = true
                     DataBaseManager.insertData(context!!, fileModelLocal!!)
+
+                   val location = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).toString() + "/" + fileModelLocal!!.name
+
+                    AlertDialog.Builder(context!!, R.style.Theme_MaterialComponents_Dialog_Alert)
+                        .setTitle("MD5 файла")
+                        .setMessage(Utils.fileToMD5(location))
+                        .setPositiveButton("Ok") { _, _ -> }
+                        .create()
+                        .show()
                 }
             }
         }.response { req, res, result ->

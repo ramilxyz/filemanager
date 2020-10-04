@@ -1,10 +1,14 @@
 package xyz.ramil.filemanager.helpers
 
 import com.google.gson.Gson
+import okhttp3.internal.and
 import org.json.JSONException
 import org.json.JSONObject
 import org.jsoup.nodes.Document
 import xyz.ramil.filemanager.model.FileModel
+import java.io.FileInputStream
+import java.io.InputStream
+import java.security.MessageDigest
 
 
 object Utils {
@@ -43,5 +47,38 @@ object Utils {
             list?.add(file)
         }
         return list
+    }
+
+    fun fileToMD5(filePath: String?): String? {
+        var inputStream: InputStream? = null
+        return try {
+            inputStream = FileInputStream(filePath)
+            val buffer = ByteArray(1024)
+            val digest = MessageDigest.getInstance("MD5")
+            var numRead = 0
+            while (numRead != -1) {
+                numRead = inputStream.read(buffer)
+                if (numRead > 0) digest.update(buffer, 0, numRead)
+            }
+            val md5Bytes = digest.digest()
+            convertHashToString(md5Bytes)
+        } catch (e: Exception) {
+            null
+        } finally {
+            if (inputStream != null) {
+                try {
+                    inputStream.close()
+                } catch (e: Exception) {
+                }
+            }
+        }
+    }
+
+    private fun convertHashToString(md5Bytes: ByteArray): String {
+        var returnVal = ""
+        for (i in md5Bytes.indices) {
+            returnVal += Integer.toString((md5Bytes[i] and 0xff) + 0x100, 16).substring(1)
+        }
+        return returnVal.toUpperCase()
     }
 }

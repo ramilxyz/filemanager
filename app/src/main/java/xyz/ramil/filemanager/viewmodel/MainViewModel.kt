@@ -13,5 +13,4 @@ class MainViewModel : BaseViewModel() {
             api.getFiles()
         }
     }
-
 }
