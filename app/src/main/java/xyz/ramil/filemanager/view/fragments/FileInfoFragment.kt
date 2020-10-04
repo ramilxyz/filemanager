@@ -7,13 +7,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.appcompat.widget.PopupMenu
-import androidx.core.view.get
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import xyz.ramil.filemanager.R
-import xyz.ramil.filemanager.database.DataBaseManager
 import xyz.ramil.filemanager.model.FileModel
 
 class FileInfoFragment(fileModel: FileModel) : Fragment() {

@@ -1,18 +1,12 @@
 package xyz.ramil.filemanager.view.activities
 
-import android.Manifest
-import android.app.Activity
 import android.content.BroadcastReceiver
 import android.content.Intent
 import android.content.IntentFilter
 import android.net.ConnectivityManager
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.core.app.ActivityCompat
-import org.jsoup.Jsoup
-import org.jsoup.select.Elements
 import xyz.ramil.filemanager.R
 import xyz.ramil.filemanager.data.network.NetworkChangeReceiver
 
@@ -49,7 +43,6 @@ class MainActivity : AppCompatActivity() {
         registerNetworkBroadcastForNougat()
 
 
-
     }
 
     private fun registerNetworkBroadcastForNougat() {
@@ -75,13 +68,9 @@ class MainActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         for (item in supportFragmentManager.fragments) {
-            item.onActivityResult(requestCode, resultCode, data);
+            item.onActivityResult(requestCode, resultCode, data)
         }
     }
-
-
-
-
 
 
 }

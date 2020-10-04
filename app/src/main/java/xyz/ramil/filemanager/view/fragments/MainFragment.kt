@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.Environment
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -98,9 +97,18 @@ class MainFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
                 fileModelLocal = fileModel
                 progressBarLocal = progressBar
 
-                if(ContextCompat.checkSelfPermission(context!!, Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED){
-                }else{
-                    requestPermissions(listOf(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE).toTypedArray(),1);
+                if (ContextCompat.checkSelfPermission(
+                        context!!,
+                        Manifest.permission.READ_CONTACTS
+                    ) == PackageManager.PERMISSION_GRANTED
+                ) {
+                } else {
+                    requestPermissions(
+                        listOf(
+                            Manifest.permission.READ_EXTERNAL_STORAGE,
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE
+                        ).toTypedArray(), 1
+                    )
                 }
             }
         })
@@ -140,7 +148,7 @@ class MainFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     }
 
     private fun success(data: Any?) {
-        val document: org.jsoup.nodes.Document= data as Document
+        val document: org.jsoup.nodes.Document = data as Document
 
         val fileList: List<FileModel>? = Utils.documentToJSONObject(document)
 
@@ -184,29 +192,36 @@ class MainFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
-        if(grantResults.size >0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+        if (grantResults.size > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             downloadFiles(fileModelLocal!!, progressBarLocal!!)
         }
     }
 
     fun downloadFiles(fileModel: FileModel, progressBar: ProgressBar) {
-        Fuel.download(BASE_URL+"/source/snapshot/"+fileModel.name).destination {
-                response, url -> val dir = File(
-            Environment.getExternalStoragePublicDirectory(
-                Environment.DIRECTORY_DOWNLOADS).toString())
-            File(dir, fileModel.name)
-        }.progress {
-                readBytes, totalBytes -> val progress = (readBytes.toFloat()*100 / totalBytes.toFloat()*100).toInt()/100
-            progressBarLocal?.progress = (readBytes.toFloat()*100 / totalBytes.toFloat()*100).toInt()/100
-            if(progress == 100) {
+        Fuel.download(BASE_URL + "/source/snapshot/" + fileModel.name)
+            .destination { response, url ->
+                val dir = File(
+                    Environment.getExternalStoragePublicDirectory(
+                        Environment.DIRECTORY_DOWNLOADS
+                    ).toString()
+                )
+                File(dir, fileModel.name)
+            }.progress { readBytes, totalBytes ->
+            val progress = (readBytes.toFloat() * 100 / totalBytes.toFloat() * 100).toInt() / 100
+            progressBarLocal?.progress =
+                (readBytes.toFloat() * 100 / totalBytes.toFloat() * 100).toInt() / 100
+            if (progress == 100) {
                 GlobalScope.launch(Dispatchers.Main) {
-                    Toast.makeText(context, "${fileModelLocal?.name} успешно загружен!", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        context,
+                        "${fileModelLocal?.name} успешно загружен!",
+                        Toast.LENGTH_SHORT
+                    ).show()
                     fileModelLocal?.isDownload = true
                     DataBaseManager.insertData(context!!, fileModelLocal!!)
                 }
             }
-        }.response {
-                req, res, result ->
+        }.response { req, res, result ->
 
         }
     }

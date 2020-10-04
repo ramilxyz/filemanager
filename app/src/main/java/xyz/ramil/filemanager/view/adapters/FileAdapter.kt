@@ -1,12 +1,8 @@
 package xyz.ramil.filemanager.view.adapters
 
-import android.Manifest
 import android.content.Context
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
-import android.os.Environment
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,19 +10,13 @@ import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.RelativeLayout
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
-import androidx.core.app.ActivityCompat.requestPermissions
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
-import com.github.kittinunf.fuel.Fuel
 import xyz.ramil.filemanager.R
 import xyz.ramil.filemanager.helpers.Constants.BASE_URL
 import xyz.ramil.filemanager.model.FileModel
-import xyz.ramil.filemanager.view.activities.MainActivity
-import java.io.File
 
 
 class FileAdapter(private var data: List<FileModel>, private val context: Context, view: View?) :
@@ -54,12 +44,9 @@ class FileAdapter(private var data: List<FileModel>, private val context: Contex
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-
-
-        if(data[position].isDownload!!) {
+        if (data[position].isDownload!!) {
             holder.pb.visibility = View.GONE
         }
-
 
         if (mOnItemClickListener != null) {
             holder.rlFile.setOnClickListener(View.OnClickListener {
@@ -73,9 +60,8 @@ class FileAdapter(private var data: List<FileModel>, private val context: Contex
 
         if (data[position].image != null && !data[position].image?.isEmpty()!!) {
             holder.image.visibility = View.VISIBLE
-            val url = BASE_URL+data[position].image
+            val url = BASE_URL + data[position].image
 
-            Log.d("IIIIIIIII", " "+url)
             Glide.with(context)
                 .load(url)
                 .apply(
@@ -95,12 +81,7 @@ class FileAdapter(private var data: List<FileModel>, private val context: Contex
         } else holder.body.visibility = View.GONE
 
         holder.title.text = data[position].name
-
-
-
     }
-
-
 
     override fun getItemCount(): Int {
         return data.size
@@ -109,7 +90,10 @@ class FileAdapter(private var data: List<FileModel>, private val context: Contex
     private fun hasPermissions(context: Context?, permissions: List<String>): Boolean {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && context != null) {
             return permissions.all { permission ->
-                ActivityCompat.checkSelfPermission(context, permission) == PackageManager.PERMISSION_GRANTED
+                ActivityCompat.checkSelfPermission(
+                    context,
+                    permission
+                ) == PackageManager.PERMISSION_GRANTED
             }
         }
 
@@ -123,7 +107,7 @@ class FileAdapter(private var data: List<FileModel>, private val context: Contex
         val image: ImageView
 
         val rlFile: RelativeLayout
-        val pb:ProgressBar
+        val pb: ProgressBar
         override fun onClick(view: View) {}
 
         init {

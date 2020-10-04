@@ -6,13 +6,10 @@ import okhttp3.Interceptor.Companion.invoke
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.converter.gson.GsonConverterFactory.*
 import xyz.ramil.filemanager.helpers.Constants.BASE_URL
 import java.util.concurrent.TimeUnit
 
 object NetworkService {
-
 
 
     private val loggingInterceptor = run {
@@ -55,19 +52,6 @@ object NetworkService {
             .build()
             .create(Api::class.java)
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 }
