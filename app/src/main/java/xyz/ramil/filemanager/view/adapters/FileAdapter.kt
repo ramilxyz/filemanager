@@ -46,6 +46,9 @@ class FileAdapter(private var data: List<FileModel>, private val context: Contex
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         if (data[position].isDownload!!) {
             holder.pb.visibility = View.GONE
+            holder.ivDowunload.visibility = View.GONE
+        } else {
+            holder.ivDowunload.visibility = View.VISIBLE
         }
 
         if (mOnItemClickListener != null) {
@@ -54,7 +57,8 @@ class FileAdapter(private var data: List<FileModel>, private val context: Contex
                     data[position],
                     holder.pb
                 )
-                holder.pb.visibility = View.VISIBLE
+                if (!data[position].isDownload!!)
+                    holder.pb.visibility = View.VISIBLE
             })
         }
 
@@ -105,6 +109,7 @@ class FileAdapter(private var data: List<FileModel>, private val context: Contex
         val title: TextView
         val body: TextView
         val image: ImageView
+        val ivDowunload: ImageView
 
         val rlFile: RelativeLayout
         val pb: ProgressBar
@@ -116,7 +121,7 @@ class FileAdapter(private var data: List<FileModel>, private val context: Contex
             body = view.findViewById(R.id.tvLastModified)
             image = view.findViewById(R.id.ivPicture)
             pb = view.findViewById(R.id.progress_bar)
-
+            ivDowunload = view.findViewById(R.id.ivDownload)
             rlFile = view.findViewById(R.id.rlFile)
         }
     }

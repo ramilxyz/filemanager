@@ -4,5 +4,4 @@ object Constants {
 
     val BASE_URL = "https://www.openssl.org"
 
-
 }

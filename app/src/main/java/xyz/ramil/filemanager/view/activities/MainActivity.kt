@@ -41,8 +41,6 @@ class MainActivity : AppCompatActivity() {
             }
         })
         registerNetworkBroadcastForNougat()
-
-
     }
 
     private fun registerNetworkBroadcastForNougat() {
@@ -71,6 +69,4 @@ class MainActivity : AppCompatActivity() {
             item.onActivityResult(requestCode, resultCode, data)
         }
     }
-
-
 }

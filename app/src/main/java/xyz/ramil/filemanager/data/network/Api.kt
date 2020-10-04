@@ -8,5 +8,4 @@ interface Api {
     @GET("/source/snapshot")
     suspend fun getFiles(
     ): org.jsoup.nodes.Document
-
 }

@@ -60,8 +60,4 @@
         android:layout_margin="8dp"
         android:padding="4dp"
         app:srcCompat="@drawable/ic_download" />
-
-
-
-
 </RelativeLayout>

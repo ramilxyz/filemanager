@@ -2,7 +2,6 @@ package xyz.ramil.filemanager.view.fragments
 
 import android.Manifest
 import android.content.Context
-import android.content.DialogInterface
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.Environment
@@ -49,6 +48,7 @@ class MainFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
     var fileModelLocal: FileModel? = null
     var progressBarLocal: ProgressBar? = null
+    var dialogVisible = false
 
 
     override fun onCreateView(
@@ -78,7 +78,7 @@ class MainFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         recyclerView?.setHasFixedSize(true)
         recyclerView?.layoutManager = WrapContentGridLayoutManager(activity, 1)
         contentLayout = view!!.findViewById<FrameLayout>(R.id.rootView)
-        tvNotSavedPosts = view!!.findViewById(R.id.tvNotSavedPosts)
+        tvNotSavedPosts = view!!.findViewById(R.id.tvNotSaveFiles)
 
         setupRecyclerView()
     }
@@ -90,28 +90,25 @@ class MainFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
         fileAdapter?.setOnItemClickListener(object : FileAdapter.OnItemClickListener {
             override fun OnItemClick(fileModel: FileModel, progressBar: ProgressBar) {
-//                val fragment = PostFragment(fileModel)
-//                activity?.supportFragmentManager?.beginTransaction()
-//                    ?.setCustomAnimations(R.anim.scale_in, R.anim.scale_out)
-//                    ?.add(R.id.rootView, fragment, "PostFragment" + fileModel)
-//                    ?.addToBackStack(null)?.commit()
-
                 fileModelLocal = fileModel
                 progressBarLocal = progressBar
 
-                if (ContextCompat.checkSelfPermission(
-                        context!!,
-                        Manifest.permission.READ_CONTACTS
-                    ) == PackageManager.PERMISSION_GRANTED
-                ) {
-                } else {
-                    requestPermissions(
-                        listOf(
-                            Manifest.permission.READ_EXTERNAL_STORAGE,
-                            Manifest.permission.WRITE_EXTERNAL_STORAGE
-                        ).toTypedArray(), 1
-                    )
-                }
+                if (!fileModel.isDownload!!) {
+
+                    if (ContextCompat.checkSelfPermission(
+                            context!!,
+                            Manifest.permission.READ_CONTACTS
+                        ) == PackageManager.PERMISSION_GRANTED
+                    ) {
+                    } else {
+                        requestPermissions(
+                            listOf(
+                                Manifest.permission.READ_EXTERNAL_STORAGE,
+                                Manifest.permission.WRITE_EXTERNAL_STORAGE
+                            ).toTypedArray(), 1
+                        )
+                    }
+                } else md5Dialog()
             }
         })
 
@@ -199,7 +196,6 @@ class MainFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         }
     }
 
-
     fun downloadFiles(fileModel: FileModel, progressBar: ProgressBar) {
         Fuel.download(BASE_URL + "/source/snapshot/" + fileModel.name)
             .destination { response, url ->
@@ -210,31 +206,47 @@ class MainFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
                 )
                 File(dir, fileModel.name)
             }.progress { readBytes, totalBytes ->
-            val progress = (readBytes.toFloat() * 100 / totalBytes.toFloat() * 100).toInt() / 100
-            progressBarLocal?.progress =
-                (readBytes.toFloat() * 100 / totalBytes.toFloat() * 100).toInt() / 100
-            if (progress == 100) {
-                GlobalScope.launch(Dispatchers.Main) {
-                    Toast.makeText(
-                        context,
-                        "${fileModelLocal?.name} успешно загружен!",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    fileModelLocal?.isDownload = true
-                    DataBaseManager.insertData(context!!, fileModelLocal!!)
+                val progress =
+                    (readBytes.toFloat() * 100 / totalBytes.toFloat() * 100).toInt() / 100
+                progressBarLocal?.progress =
+                    (readBytes.toFloat() * 100 / totalBytes.toFloat() * 100).toInt() / 100
+                if (progress == 100) {
+                    GlobalScope.launch(Dispatchers.Main) {
+                        Toast.makeText(
+                            context,
+                            "${fileModelLocal?.name} успешно загружен!",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        fileModelLocal?.isDownload = true
+                        fileModelLocal?.location =
+                            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
+                                .toString() + "/" + fileModelLocal!!.name
 
-                   val location = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).toString() + "/" + fileModelLocal!!.name
-
-                    AlertDialog.Builder(context!!, R.style.Theme_MaterialComponents_Dialog_Alert)
-                        .setTitle("MD5 файла")
-                        .setMessage(Utils.fileToMD5(location))
-                        .setPositiveButton("Ok") { _, _ -> }
-                        .create()
-                        .show()
+                        DataBaseManager.insertData(context!!, fileModelLocal!!)
+                        md5Dialog()
+                    }
                 }
-            }
-        }.response { req, res, result ->
+            }.response { req, res, result ->
 
+            }
+    }
+
+    fun md5Dialog() {
+        val location =
+            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
+                .toString() + "/" + fileModelLocal!!.name
+        if (Utils.fileToMD5(location) == null) {
+            downloadFiles(fileModelLocal!!, progressBarLocal!!)
+            return
+        }
+        if (!dialogVisible) {
+            AlertDialog.Builder(context!!)
+                .setTitle("MD5 файла")
+                .setMessage(Utils.fileToMD5(location))
+                .setPositiveButton("Ok") { _, _ -> dialogVisible = false }
+                .create()
+                .show()
+            dialogVisible = true
         }
     }
 }

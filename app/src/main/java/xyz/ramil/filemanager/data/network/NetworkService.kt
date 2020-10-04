@@ -11,7 +11,6 @@ import java.util.concurrent.TimeUnit
 
 object NetworkService {
 
-
     private val loggingInterceptor = run {
         val httpLoggingInterceptor = HttpLoggingInterceptor()
         httpLoggingInterceptor.apply {
@@ -52,6 +51,4 @@ object NetworkService {
             .build()
             .create(Api::class.java)
     }
-
-
 }
