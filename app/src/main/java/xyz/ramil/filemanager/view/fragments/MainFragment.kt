@@ -100,6 +100,8 @@ class MainFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
                             Manifest.permission.READ_CONTACTS
                         ) == PackageManager.PERMISSION_GRANTED
                     ) {
+
+
                     } else {
                         requestPermissions(
                             listOf(
@@ -107,6 +109,7 @@ class MainFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
                                 Manifest.permission.WRITE_EXTERNAL_STORAGE
                             ).toTypedArray(), 1
                         )
+                        return
                     }
                 } else md5Dialog()
             }
