@@ -50,7 +50,6 @@ class MainFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     var progressBarLocal: ProgressBar? = null
     var dialogVisible = false
 
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
