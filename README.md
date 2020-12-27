@@ -1,5 +1,5 @@
 # filemanager
-Пример 
+менеджер файлов для openssl.org. (скачивание, просмотр MD5)
 
 стек: kotlin, coroutine, livedata, room, retrofit2, mvvm
 
